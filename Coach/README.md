@@ -94,6 +94,17 @@ teams with strong Kubernetes experience.
 
 ---
 
+## Student Resources
+
+Provide participants with a `Resources.zip` containing the FabTechOps source code
+(Dockerfiles, app code, and sample manifests). If teams run into build issues, the
+pre-built public images on Docker Hub can be imported directly into their ACR as a fallback:
+
+- `docker.io/whatthehackmsft/api:latest` → `fabtech-api:v1`
+- `docker.io/whatthehackmsft/web:latest` → `fabtech-web:v1`
+
+---
+
 ## Cleanup
 
 Remind all teams to delete resources at the end:
