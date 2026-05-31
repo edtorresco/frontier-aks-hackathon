@@ -48,4 +48,4 @@ Operating many Kubernetes clusters one at a time does not scale well. In this ch
 - [Azure Kubernetes Fleet Manager overview](https://learn.microsoft.com/azure/kubernetes-fleet/overview)
 - [Update orchestration with Fleet Manager](https://learn.microsoft.com/azure/kubernetes-fleet/update-orchestration)
 - [Resource propagation with Fleet Manager](https://learn.microsoft.com/azure/kubernetes-fleet/concepts-resource-propagation)
-- [Azure Policy overview](https://learn.microsoft.com/azure/governance/policy/overview)
+- [Resource propagation in Fleet Manager — concepts](https://learn.microsoft.com/azure/kubernetes-fleet/concepts-resource-propagation)

@@ -205,9 +205,20 @@ spec:
         - key: "karpenter.azure.com/sku-family"
           operator: In
           values: ["D", "E"]
+      # Resource requests/limits on pods are required for Karpenter to right-size nodes
+      resources:
+        requests:
+          cpu: "250m"
+          memory: "256Mi"
+        limits:
+          cpu: "4"
+          memory: "8Gi"
   limits:
     cpu: "100"
     memory: 400Gi
   disruption:
     consolidationPolicy: WhenEmptyOrUnderutilized
+    consolidateAfter: 30s
+    budgets:
+    - nodes: "20%"   # At most 20% of nodes disrupted at once
 ```

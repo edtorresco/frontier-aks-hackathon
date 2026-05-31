@@ -35,6 +35,8 @@ and **Application Gateway for Containers (AGC)**.
 
 - Verify the application is accessible from a browser.
 - Demonstrate a **Helm upgrade** (e.g., change the replica count) and a **Helm rollback**.
+- Add a **`PodDisruptionBudget`** for each workload to protect availability during node drains.
+- Configure **`topologySpreadConstraints`** on each Deployment so pods are spread across availability zones.
 
 ## Success Criteria
 
@@ -44,6 +46,8 @@ and **Application Gateway for Containers (AGC)**.
 4. For Option B: A `Gateway` and `HTTPRoute` resource are present and the route status shows `Accepted`.
 5. For Option C: An `ApplicationLoadBalancer` resource exists and the AGC frontend resolves correctly.
 6. Show a successful `helm upgrade` and `helm rollback`.
+7. A `PodDisruptionBudget` exists for `fabtech-api` and `fabtech-web` with `minAvailable: 1`.
+8. Each Deployment uses `topologySpreadConstraints` to distribute pods across availability zones.
 
 ## Learning Resources
 

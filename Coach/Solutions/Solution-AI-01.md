@@ -82,6 +82,11 @@ spec:
       containers:
       - name: cuda-vector-add
         image: "mcr.microsoft.com/oss/nvidia/samples/vectoradd:1.0"
+        securityContext:
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
         resources:
           limits:
             nvidia.com/gpu: 1
@@ -123,6 +128,12 @@ spec:
       containers:
       - name: inference
         image: ghcr.io/huggingface/text-generation-inference:2.0
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
         args:
         - --model-id
         - microsoft/phi-2
@@ -156,9 +167,12 @@ spec:
 
 ```bash
 # Create HuggingFace token secret
+# Use `read -rs` to avoid exposing the token in shell history
+read -rs HF_TOKEN && echo "HF_TOKEN set"
 kubectl create secret generic hf-token \
   --namespace fabtech \
-  --from-literal=token=<HUGGINGFACE_TOKEN>
+  --from-literal=token="$HF_TOKEN"
+unset HF_TOKEN
 
 kubectl apply -f hf-inference-deployment.yaml
 

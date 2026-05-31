@@ -48,4 +48,4 @@ KAITO simplifies the experience of running supported open-source language models
 - [Use the AI toolchain operator add-on in AKS](https://learn.microsoft.com/azure/aks/ai-toolchain-operator)
 - [Use GPU-enabled node pools in AKS](https://learn.microsoft.com/azure/aks/gpu-cluster)
 - [Workload identity overview for AKS](https://learn.microsoft.com/azure/aks/workload-identity-overview)
-- [Deploy Phi family models in Azure AI Foundry](https://learn.microsoft.com/azure/ai-studio/how-to/deploy-models-phi-3)
+- [AKS AI Toolchain Operator (KAITO)](https://learn.microsoft.com/azure/aks/ai-toolchain-operator)

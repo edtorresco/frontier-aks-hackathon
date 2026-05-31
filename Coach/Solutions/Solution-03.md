@@ -106,17 +106,9 @@ spec:
 
 ### Part 3 — Option B: Gateway API via App Routing
 
-Enable Gateway API support on the add-on:
-
-```bash
-az aks approuting update \
-  --resource-group $RG \
-  --name $CLUSTER_NAME \
-  --enable-keda  # not needed; use gateway flag
-```
-
 > **Note:** Gateway API CRDs are installed automatically by the App Routing add-on when the
-> cluster has `--enable-app-routing`. No manual CRD install needed.
+> cluster has `--enable-app-routing`. No manual CRD install needed. No extra `az aks approuting
+> update` step is required for Option B.
 
 ```yaml
 # gateway.yaml
@@ -250,4 +242,53 @@ kubectl rollout status deployment/fabtech-api -n $NAMESPACE
 
 helm rollback fabtech --namespace $NAMESPACE
 helm history fabtech --namespace $NAMESPACE
+```
+
+### Production Readiness: PodDisruptionBudget
+
+A `PodDisruptionBudget` ensures at least one replica stays available during node
+drains and voluntary disruptions (upgrades, scale-down):
+
+```yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: fabtech-api-pdb
+  namespace: fabtech
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: fabtech-api
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: fabtech-web-pdb
+  namespace: fabtech
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: fabtech-web
+```
+
+### Production Readiness: Zone Spread
+
+Add `topologySpreadConstraints` to each Deployment's pod spec to distribute
+pods evenly across availability zones:
+
+```yaml
+topologySpreadConstraints:
+- maxSkew: 1
+  topologyKey: topology.kubernetes.io/zone
+  whenUnsatisfiable: DoNotSchedule
+  labelSelector:
+    matchLabels:
+      app: fabtech-api
+```
+
+```bash
+kubectl apply -f pdb.yaml
+kubectl get pdb -n fabtech
 ```

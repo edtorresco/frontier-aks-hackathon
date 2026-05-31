@@ -60,6 +60,12 @@ spec:
       containers:
       - name: postgres
         image: postgres:16
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 999
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
         env:
         - name: POSTGRES_PASSWORD
           valueFrom:

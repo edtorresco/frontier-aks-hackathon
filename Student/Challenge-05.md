@@ -39,6 +39,8 @@ managed services.
 3. A custom Grafana dashboard shows at least **CPU usage** and **pod restart count** panels.
 4. Explain to your coach the difference between **metrics** (Prometheus/Grafana) and
    **logs** (Container Insights/Log Analytics) and when you would use each.
+5. **(Optional)** Create an **Azure Monitor Action Group** (email) and attach an alert rule
+   that fires when any pod restarts more than 5 times in 5 minutes.
 
 ## Learning Resources
 

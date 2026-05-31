@@ -50,7 +50,9 @@ kubectl get pods -n aks-istio-system
 
 ```bash
 # Label the namespace for automatic injection
-kubectl label namespace fabtech istio.io/rev=asm-1-23  # Use actual revision from above
+# Get the exact revision label first:
+REVISION=$(az aks mesh get-revisions --location $LOCATION -o tsv --query 'meshRevisions[-1].revision')
+kubectl label namespace fabtech istio.io/rev=$REVISION
 
 # Restart all pods to inject sidecars
 kubectl rollout restart deployment -n fabtech
@@ -109,11 +111,18 @@ spec:
       containers:
       - name: api
         image: <ACR>/fabtech-api:v2
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop: ["ALL"]
 ```
 
 ```yaml
 # destination-rule.yaml
-apiVersion: networking.istio.io/v1alpha3
+apiVersion: networking.istio.io/v1
 kind: DestinationRule
 metadata:
   name: fabtech-api
@@ -129,7 +138,7 @@ spec:
       version: v2
 ---
 # virtual-service.yaml
-apiVersion: networking.istio.io/v1alpha3
+apiVersion: networking.istio.io/v1
 kind: VirtualService
 metadata:
   name: fabtech-api

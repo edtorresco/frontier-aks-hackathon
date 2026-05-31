@@ -41,6 +41,13 @@ az aks update \
   --enable-aad \
   --aad-admin-group-object-ids $ADMIN_GROUP_ID
 
+# Disable local admin accounts — forces all access through Entra ID,
+# preventing bypass via `az aks get-credentials --admin`
+az aks update \
+  --resource-group $RG \
+  --name $CLUSTER_NAME \
+  --disable-local-accounts
+
 # Refresh credentials
 az aks get-credentials --resource-group $RG --name $CLUSTER_NAME --overwrite-existing
 kubelogin convert-kubeconfig -l azurecli

@@ -44,12 +44,17 @@ RG=rg-frontier-aks
 CLUSTER_NAME=aks-frontier
 REPO_URL=https://github.com/<your-org>/frontier-aks-fleet
 
-# Create a GitHub PAT and store as a Kubernetes secret
+# Set credentials without exposing them in shell history
+# Use `read -rs` to prompt for the value silently, then pass via variable
+read -rs GITHUB_USERNAME && echo "Username set"
+read -rs GITHUB_PAT && echo "PAT set"
+
+# Create a Kubernetes secret from the environment variables
 kubectl create namespace cluster-config
 kubectl create secret generic flux-git-credentials \
   --namespace cluster-config \
-  --from-literal=username=<GITHUB_USERNAME> \
-  --from-literal=password=<GITHUB_PAT>
+  --from-literal=username="$GITHUB_USERNAME" \
+  --from-literal=password="$GITHUB_PAT"
 
 az k8s-configuration flux create \
   --resource-group $RG \
@@ -60,9 +65,12 @@ az k8s-configuration flux create \
   --scope cluster \
   --url $REPO_URL \
   --branch main \
-  --https-user <GITHUB_USERNAME> \
-  --https-key <GITHUB_PAT> \
+  --https-user "$GITHUB_USERNAME" \
+  --https-key "$GITHUB_PAT" \
   --kustomization name=apps path=./clusters/production prune=true interval=1m
+
+# Clear credentials from memory
+unset GITHUB_USERNAME GITHUB_PAT
 
 # Verify
 flux check

@@ -19,6 +19,7 @@ Deploy an AKS cluster that meets the following requirements:
 - Uses **VMSS-based node pools** with **AzureLinux 3** as the node OS
 - Is **attached to your ACR** from Challenge 01 so it can pull images without credentials
 - Has a **system node pool** with at least 3 nodes
+- Sets **`--auto-upgrade-channel stable`** and **`--node-os-upgrade-channel NodeImage`** for automated patching
 
 > **Hint:** You have two deployment paths: **AKS Standard** (you configure everything)
 > or **AKS Automatic** (production defaults pre-configured, including monitoring and security).
@@ -38,7 +39,8 @@ Once the cluster is running:
 2. The cluster uses **Azure CNI Overlay** — pod CIDRs are from an overlay range, not the VNet CIDR.
 3. Workload Identity / OIDC issuer is enabled on the cluster.
 4. The cluster can pull images from your ACR without an explicit secret.
-5. Explain to your coach the difference between **AKS Standard** and **AKS Automatic**, and which one you chose and why.
+5. Auto-upgrade channel is set to **stable** and node OS upgrade channel is set to **NodeImage**.
+6. Explain to your coach the difference between **AKS Standard** and **AKS Automatic**, and which one you chose and why.
 
 ## Learning Resources
 

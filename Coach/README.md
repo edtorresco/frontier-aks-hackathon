@@ -24,6 +24,7 @@ requirements, and a suggested agenda.
 | 10 | Storage | [Solution-10.md](./Solutions/Solution-10.md) |
 | 11 | Enterprise Networking | [Solution-11.md](./Solutions/Solution-11.md) |
 | 12 | AKS Fleet Manager | [Solution-12.md](./Solutions/Solution-12.md) |
+| 13 | FinOps & Cost Management *(optional)* | [Solution-13.md](./Solutions/Solution-13.md) |
 | AI-01 | AI on AKS Foundations *(optional)* | [Solution-AI-01.md](./Solutions/Solution-AI-01.md) |
 | AI-02 | LLM Inference with KAITO *(optional)* | [Solution-AI-02.md](./Solutions/Solution-AI-02.md) |
 
@@ -43,7 +44,7 @@ Resource providers to pre-register:
 ```bash
 for ns in Microsoft.ContainerService Microsoft.Monitor Microsoft.Dashboard \
            Microsoft.KubernetesConfiguration Microsoft.ContainerRegistry; do
-  az provider register --namespace $ns --accept-terms
+  az provider register --namespace $ns
 done
 ```
 
@@ -51,7 +52,20 @@ done
 
 ## Suggested Agenda
 
-### Full 2-Day Event (Expert Track)
+### Full 3-Day Event (Recommended)
+
+| Day | Time | Challenges | Focus |
+|-----|------|-----------|-------|
+| Day 1 | AM | Ch 00–01 | Prerequisites, Containers & ACR |
+| Day 1 | PM | Ch 02–04 | Cluster Deployment, App Deploy & Helm, Workload Identity |
+| Day 2 | AM | Ch 05–07 | Observability, Autoscaling, GitOps |
+| Day 2 | PM | Ch 08–09 | Security Hardening, Service Mesh (Istio) |
+| Day 3 | AM | Ch 10–12 | Stateful Workloads, Enterprise Networking, Fleet Manager |
+| Day 3 | PM | Ch 13, AI-01, AI-02 | FinOps *(optional)*, GPU / KAITO *(optional)* |
+
+> **Tip:** Teams finishing early on Day 2 PM can start Ch 10 or the AI track.
+
+### Focused 2-Day Event
 
 | Day | Challenges | Focus |
 |-----|-----------|-------|

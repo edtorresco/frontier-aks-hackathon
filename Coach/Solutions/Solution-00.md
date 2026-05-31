@@ -48,7 +48,7 @@ flux --version  # Confirm >= 2.0.0
 # Verify all required providers are registered
 for ns in Microsoft.ContainerService Microsoft.Monitor Microsoft.Dashboard \
            Microsoft.KubernetesConfiguration Microsoft.ContainerRegistry; do
-  az provider register --namespace $ns --accept-terms
+  az provider register --namespace $ns
   echo "Registered: $ns"
 done
 ```

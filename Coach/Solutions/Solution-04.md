@@ -10,6 +10,12 @@
   errors here constantly. A `describe` on the pod shows the mount error clearly.
 - `syncSecret.enabled=true` in the CSI Helm values is required to sync Key Vault secrets as
   Kubernetes Secret objects. Without it, secrets are only available as mounted files.
+- **Secrets layered approach**: Kubernetes Secret objects are base64-encoded (not encrypted at rest
+  by default). They are better than plaintext env vars but still accessible to anyone with `kubectl get secret`.
+  Key Vault + CSI driver is the production-grade approach: secrets never land in etcd, and access
+  is fully audited. If teams ask why the `secretObjects` sync creates a K8s Secret, clarify that
+  this is a compatibility bridge for legacy apps that expect `secretKeyRef` — the canonical path
+  remains the CSI volume mount directly from Key Vault.
 - The `azure.workload.identity/use: "true"` label must be on the **Pod** (not Deployment
   selector labels alone) — it flows via the pod template spec labels.
 - Verify CSI driver running: `kubectl get pods -n kube-system | grep secrets-store`
@@ -138,32 +144,43 @@ sed -e "s/<MI_CLIENT_ID>/$MI_CLIENT_ID/g" \
 
 ### Part 4: Update Deployment
 
-Key additions to the deployment pod spec:
+Key additions to the Deployment (the label **must** be in `template.metadata.labels`, not
+in the pod spec itself):
 
 ```yaml
-spec:
-  serviceAccountName: fabtech-api-sa
-  labels:
-    azure.workload.identity/use: "true"
-  volumes:
-  - name: secrets-store
-    csi:
-      driver: secrets-store.csi.k8s.io
-      readOnly: true
-      volumeAttributes:
-        secretProviderClass: fabtech-secrets
-  containers:
-  - name: api
-    volumeMounts:
-    - name: secrets-store
-      mountPath: /mnt/secrets
-      readOnly: true
-    env:
-    - name: DB_CONNECTION_STRING
-      valueFrom:
-        secretKeyRef:
-          name: fabtech-db-secret
-          key: connectionString
+  template:
+    metadata:
+      labels:
+        app: fabtech-api
+        azure.workload.identity/use: "true"   # Required — injects the federated token
+    spec:
+      serviceAccountName: fabtech-api-sa
+      volumes:
+      - name: secrets-store
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: fabtech-secrets
+      containers:
+      - name: api
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop: ["ALL"]
+        volumeMounts:
+        - name: secrets-store
+          mountPath: /mnt/secrets
+          readOnly: true
+        env:
+        - name: DB_CONNECTION_STRING
+          valueFrom:
+            secretKeyRef:
+              name: fabtech-db-secret
+              key: connectionString
 ```
 
 ### Verify

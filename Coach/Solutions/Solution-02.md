@@ -19,6 +19,11 @@
 - **AKS Automatic not available:** Still preview in some regions. Fall back to Standard path.
 - **Cilium + Overlay not available:** Requires K8s >= 1.29. Confirm `--kubernetes-version 1.29`
   or later is used.
+- **`--network-dataplane cilium` vs `--network-policy cilium`:** `--network-dataplane cilium`
+  replaces the Linux iptables/kube-proxy dataplane with Cilium's eBPF engine. When this flag
+  is set, Cilium automatically handles NetworkPolicy enforcement — there is no need to also
+  pass `--network-policy cilium`. Use `--network-policy cilium` only when you want Cilium for
+  policy enforcement while keeping the iptables dataplane (a legacy combination).
 - **`kubelogin` token error after `az aks get-credentials`:** Ensure `kubelogin` is installed
   and run `kubelogin convert-kubeconfig -l azurecli`.
 

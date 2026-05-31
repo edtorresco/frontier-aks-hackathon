@@ -4,14 +4,15 @@
 
 ## Notes & Guidance
 
-- **KAITO requires the AI Toolchain Operator add-on or the KAITO operator to be installed.**
-  The AKS add-on (`--enable-ai-toolchain-operator`) is in preview — register the feature
-  flag in advance: `az feature register --namespace Microsoft.ContainerService --name AIToolchainOperatorPreview`
 - **Model download takes 5–15 minutes** (Phi-3.5-mini is ~4 GB). Teams must plan for this
   wait time during the challenge.
 - **Cost alert:** GPU nodes for KAITO (Standard_NC6s_v3 or NC4as_T4_v3) cost
   $0.50–$2.00/hour. Scale down immediately after the challenge.
-- If the AI Toolchain Operator preview is not available in the team's region, teams can
+- **KAITO AI Toolchain Operator is GA as of AKS 1.30.** No feature flag registration is
+  required for clusters running AKS 1.30+. For older clusters or regions still in preview,
+  register in advance and wait up to 60 minutes for propagation:
+  `az feature register --namespace Microsoft.ContainerService --name AIToolchainOperatorPreview`
+- If the AI Toolchain Operator is not available in the team's region, teams can
   install KAITO manually via Helm.
 
 ### Common Issues
@@ -20,8 +21,6 @@
   nodes available or taint/toleration mismatch.
 - **Model download OOMKilled:** Node does not have enough memory. Minimum: 16 GiB RAM
   plus GPU VRAM for the model.
-- **KAITO feature flag not registered:** The `AIToolchainOperatorPreview` feature can take
-  30–60 minutes to propagate after registration.
 
 ### Workspace Status Check
 
@@ -39,18 +38,7 @@ kubectl describe workspace workspace-phi3-mini -n kaito-workspace
 RG=rg-frontier-aks
 CLUSTER_NAME=aks-frontier
 
-# Register preview feature (do this in advance — takes up to 1 hour)
-az feature register \
-  --namespace Microsoft.ContainerService \
-  --name AIToolchainOperatorPreview
-
-# Wait for registration
-az feature show \
-  --namespace Microsoft.ContainerService \
-  --name AIToolchainOperatorPreview \
-  --query "properties.state"
-
-# Enable the add-on
+# Enable the KAITO add-on (GA since AKS 1.30 — no feature flag required)
 az aks update \
   --resource-group $RG \
   --name $CLUSTER_NAME \

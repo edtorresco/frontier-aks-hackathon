@@ -37,7 +37,9 @@ no static credentials in pods.
 2. A Managed Identity with a federated credential exists, bound to the Kubernetes `ServiceAccount`.
 3. The API pod reads the secret from the mounted CSI volume — no hardcoded secrets in any manifest.
 4. Show that the Kubernetes `ServiceAccount` has the required annotation.
-5. Explain to your coach why secrets should never be stored in Kubernetes Secret objects or environment variables for sensitive values, and what **Workload Identity** + Key Vault offers instead.
+5. Explain to your coach the security tradeoff between environment variables, Kubernetes Secret
+   objects (base64-encoded, not encrypted at rest by default), and **Workload Identity + Key Vault**
+   (the recommended production approach for sensitive credentials).
 
 ## Advanced Challenges (Optional)
 

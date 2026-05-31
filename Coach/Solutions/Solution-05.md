@@ -144,3 +144,54 @@ sum(kube_pod_container_status_restarts_total) by (namespace, pod)
 # HTTP Request Rate (if NGINX ingress is instrumented)
 sum(rate(nginx_ingress_controller_requests[5m])) by (ingress, namespace)
 ```
+
+### Part 6: Azure Monitor Alert Rule + Action Group
+
+Alerts close the loop from observation to action. Create an Action Group and a
+Prometheus-based alert rule for high pod restart rates:
+
+```bash
+ACTION_GROUP_NAME=ag-aks-ops
+
+# Create an email Action Group
+az monitor action-group create \
+  --resource-group $RG \
+  --name $ACTION_GROUP_NAME \
+  --short-name aks-ops \
+  --action email ops-team ops-team@example.com
+
+ACTION_GROUP_ID=$(az monitor action-group show \
+  --resource-group $RG \
+  --name $ACTION_GROUP_NAME \
+  --query id -o tsv)
+
+# Create a Prometheus alert rule targeting the Azure Monitor workspace
+az monitor alert-processing-rule create \
+  --resource-group $RG \
+  --name alert-high-restart-rate \
+  --rule-type AddActionGroups \
+  --action-groups $ACTION_GROUP_ID \
+  --scopes $MONITOR_WS_ID
+
+# Alert rule YAML (for reference — applied via az monitor metrics alert create
+# or Bicep for production use)
+# Condition: container_restart_rate > 5 in last 5 min triggers the action group
+cat <<EOF
+apiVersion: azuremonitor.microsoft.com/v1
+kind: PrometheusRuleGroup
+metadata:
+  name: aks-pod-restart-alerts
+  namespace: default
+spec:
+  clusterName: $CLUSTER_NAME
+  rules:
+  - alert: HighPodRestartRate
+    expr: |
+      increase(kube_pod_container_status_restarts_total[5m]) > 5
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Pod {{ \$labels.pod }} is restarting frequently"
+EOF
+```

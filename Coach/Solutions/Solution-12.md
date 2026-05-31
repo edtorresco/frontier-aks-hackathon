@@ -122,30 +122,6 @@ kubectl get namespace fabtech
 
 ### Part 4: Staged Rollout Strategy for Upgrades
 
-```yaml
-# upgrade-run.yaml
-apiVersion: fleet.azure.com/v1alpha1
-kind: UpdateRun
-metadata:
-  name: upgrade-1-31
-spec:
-  fleetUpdateStrategy:
-    stages:
-    - name: canary
-      afterStageWaitTime: 10m
-      groups:
-      - name: canary-group
-    - name: production
-      groups:
-      - name: production-group
-  managedClusterUpdate:
-    upgrade:
-      type: Full
-      kubernetesVersion: "1.31"
-    nodeImageSelection:
-      type: Latest
-```
-
 ```bash
 # Assign member clusters to groups first
 az fleet member update \

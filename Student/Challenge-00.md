@@ -41,6 +41,40 @@ in later challenges. Unpack it and keep it handy.
 5. `az account show` returns your target subscription
 6. All required resource providers are in `Registered` state
 
+## Pre-flight Validation Checklist
+
+Use this checklist before starting Challenge 01 to avoid surprises mid-hackathon:
+
+```bash
+# 1. Azure CLI version >= 2.65
+az --version | head -1
+
+# 2. Logged in and correct subscription
+az account show --query "{name:name,id:id,state:state}" -o table
+
+# 3. kubectl client available
+kubectl version --client --short 2>/dev/null || kubectl version --client
+
+# 4. Helm >= 3.14
+helm version --short
+
+# 5. Flux v2
+flux --version
+
+# 6. Resource providers registered
+az provider list \
+  --query "[?namespace=='Microsoft.ContainerService' || namespace=='Microsoft.Monitor' || namespace=='Microsoft.Dashboard' || namespace=='Microsoft.KubernetesConfiguration' || namespace=='Microsoft.ContainerRegistry'].{Provider:namespace,State:registrationState}" \
+  -o table
+
+# 7. Sufficient vCPU quota (need >= 16 Standard D-series)
+az vm list-usage --location eastus \
+  --query "[?contains(name.localizedValue,'Standard D')].{Name:name.localizedValue,Current:currentValue,Limit:limit}" \
+  -o table
+```
+
+> **Important:** If any resource provider shows `NotRegistered`, run:
+> `az provider register --namespace <provider-name>` and wait for `Registered` state.
+
 ## Learning Resources
 
 - [Install Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli)
