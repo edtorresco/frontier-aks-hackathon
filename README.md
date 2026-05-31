@@ -1,4 +1,4 @@
-# What The Hack — Frontier AKS
+# Frontier AKS Hackathon
 
 ## Introduction
 
