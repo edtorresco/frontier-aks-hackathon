@@ -92,14 +92,11 @@ By the end of the hack you will have hands-on experience with:
 
 **FabTechOps** is a three-tier web application used throughout this hack:
 
-| Tier | Image | Description |
-|------|-------|-------------|
-| Frontend | `whatthehackmsft/web` | React-based conference info site |
-| API | `whatthehackmsft/api` | Node.js REST API (serves JSON data; connects to PostgreSQL if `DATABASE_URL` is set) |
-| Database | Azure Database for PostgreSQL | Managed PaaS database (optional — API falls back to bundled JSON without it) |
-
-Pre-built images are available on Docker Hub at `whatthehackmsft/web` and `whatthehackmsft/api`.
-Source code for the sample application is available in [`Student/Resources/src/`](./Student/Resources/src/).
+| Tier | Source | Description |
+|------|--------|-------------|
+| Frontend | [`Student/Resources/src/content-web`](./Student/Resources/src/content-web/) | React-based conference info site |
+| API | [`Student/Resources/src/content-api`](./Student/Resources/src/content-api/) | Node.js REST API (serves JSON data; connects to PostgreSQL if `DATABASE_URL` is set) |
+| Database | `postgres:16` | PostgreSQL database |
 
 ## Repository Contents
 

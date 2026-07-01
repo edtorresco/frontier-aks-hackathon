@@ -66,12 +66,3 @@ az acr build \
   --file Dockerfile.web \
   ../../Student/Resources/src/content-web/
 ```
-
-## Pre-built fallback
-
-If teams hit build issues, import the public images directly:
-
-```bash
-az acr import --name $ACR_NAME --source docker.io/whatthehackmsft/api:latest --image fabtech-api:v1
-az acr import --name $ACR_NAME --source docker.io/whatthehackmsft/web:latest --image fabtech-web:v1
-```

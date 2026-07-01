@@ -11,8 +11,6 @@ and verify they are ready for deployment to Kubernetes.
 ## Description
 
 The application source code is available in [`Student/Resources/src/`](./Resources/src/).
-Pre-built images are also available on Docker Hub (`whatthehackmsft/web` and `whatthehackmsft/api`)
-if you want to skip the local build.
 
 - Create a new **Azure Resource Group** for all resources used in this hackathon.
 - Deploy an **Azure Container Registry (ACR)** with **Premium SKU** — required for private

@@ -7,8 +7,6 @@
 - Teams without Docker Desktop should use **ACR Tasks** immediately — no local Docker required.
 - Emphasize `--sku Premium` for ACR. Geo-replication and private endpoints (Challenge 11)
   require Premium SKU. Standard will cause a failure later.
-- The `whatthehackmsft/api` and `whatthehackmsft/web` images can be imported directly into ACR
-  if teams run into trouble building from source — good unblocking strategy.
 - Encourage teams to also push a `v2` tag at this point (even identical to `v1`) so they
   have multiple tags available for the rolling-update demo in Challenge 03.
 
@@ -37,7 +35,7 @@ az acr create \
 echo "ACR Login Server: $(az acr show --name $ACR_NAME --query loginServer -o tsv)"
 ```
 
-### Option A — Build with ACR Tasks (recommended, no local Docker)
+### Build with ACR Tasks (recommended, no local Docker)
 
 ```bash
 # Source code lives under Student/Resources/src/
@@ -63,21 +61,6 @@ az acr import \
   --name $ACR_NAME \
   --source $ACR_NAME.azurecr.io/fabtech-web:v1 \
   --image fabtech-web:v2
-```
-
-### Option B — Import public reference images
-
-```bash
-# Use pre-built WhatTheHack images as fallback
-az acr import \
-  --name $ACR_NAME \
-  --source docker.io/whatthehackmsft/api:latest \
-  --image fabtech-api:v1
-
-az acr import \
-  --name $ACR_NAME \
-  --source docker.io/whatthehackmsft/web:latest \
-  --image fabtech-web:v1
 ```
 
 ### Verify
