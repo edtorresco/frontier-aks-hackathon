@@ -96,7 +96,7 @@ By the end of the hack you will have hands-on experience with:
 |------|--------|-------------|
 | Frontend | [`Student/Resources/src/content-web`](./Student/Resources/src/content-web/) | React-based conference info site |
 | API | [`Student/Resources/src/content-api`](./Student/Resources/src/content-api/) | Node.js REST API (serves JSON data; connects to PostgreSQL if `DATABASE_URL` is set) |
-| Database | `postgres:16` | PostgreSQL database |
+| Database | `docker pull postgres:16` | PostgreSQL database |
 
 ## Repository Contents
 
