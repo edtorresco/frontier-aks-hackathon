@@ -51,20 +51,25 @@ spec:
             capabilities:
               drop: ["ALL"]
             readOnlyRootFilesystem: true
+          {{- if .Values.api.secretStore.enabled }}
           volumeMounts:
             - name: secrets-store
               mountPath: /mnt/secrets
               readOnly: true
+          {{- end }}
           env:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
                   name: fabtech-db-secret
                   key: connectionString
+                  optional: true
+      {{- if .Values.api.secretStore.enabled }}
       volumes:
         - name: secrets-store
           csi:
             driver: secrets-store.csi.k8s.io
             readOnly: true
             volumeAttributes:
-              secretProviderClass: fabtech-secrets
+              secretProviderClass: {{ .Values.api.secretStore.secretProviderClass }}
+      {{- end }}

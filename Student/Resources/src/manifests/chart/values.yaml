@@ -16,6 +16,9 @@ api:
     limits:
       cpu: 500m
       memory: 256Mi
+  secretStore:
+    enabled: false
+    secretProviderClass: fabtech-secrets
 
 web:
   image:
