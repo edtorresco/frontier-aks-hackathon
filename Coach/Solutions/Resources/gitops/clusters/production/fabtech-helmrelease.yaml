@@ -18,9 +18,9 @@ spec:
   values:
     api:
       image:
-        repository: <ACR_NAME>.azurecr.io/fabtech-api
+        repository: frontieracretcswc.azurecr.io/fabtech-api
         tag: v1
     web:
       image:
-        repository: <ACR_NAME>.azurecr.io/fabtech-web
+        repository: frontieracretcswc.azurecr.io/fabtech-web
         tag: v1
